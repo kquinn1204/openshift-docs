@@ -1,14 +1,14 @@
 :_mod-docs-content-type: PROCEDURE
 [id="nw-metallb-configure-secondary-interface_{context}"]
-= Configuring Metallb with secondary networks
+= Configuring MetalLb with secondary networks
 
-From {product-title} 4.14 the default behaviour is to not allow forwarding of IP packets between network interfaces. Therefore when Metallb is configured on secondary interfaces which is common practice you need to add a machine configuration to enable IP forwarding for only the required interfaces. 
+From {product-title} 4.14 the default behavior is to not allow forwarding of IP packets between network interfaces. Therefore when MetalLb is configured on secondary interfaces which is common practice you need to add a machine configuration to enable IP forwarding for only the required interfaces. 
 [NOTE]
 ====
 {product-title} clusters upgraded from 4.13 are not affected as a global parameter is set during upgrade to enable global IP forwarding.
 ====
 
-Follow this procedure to add a machine configuration to enable forwarding for the secondary interface for example `bridge-net` that Metallb is configured on. 
+Follow this procedure to add a machine configuration to enable forwarding for the secondary interface for example `bridge-net` that MetalLb is configured on. 
 
 .Procedure
 
@@ -39,7 +39,7 @@ spec:
   osImageURL: ""
 ----
 
-<1> Node role where you want to enable IP forwarding.
+<1> Node role where you want to enable IP forwarding for example `worker`
 
 .. Apply the configuration by running the following command:
 +
@@ -47,7 +47,3 @@ spec:
 ----
 $ oc apply -f enable-ip-forward.yaml
 ----
-
-.Verification
-
-
