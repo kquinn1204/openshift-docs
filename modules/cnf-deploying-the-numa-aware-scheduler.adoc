@@ -8,13 +8,6 @@
 
 After you install the NUMA Resources Operator, follow this procedure to deploy the NUMA-aware secondary pod scheduler. 
 
-[NOTE]
-====
-For disconnected environments make sure that you have mirrored the numa scheduler container image `registry.redhat.io/openshift4/noderesourcetopology-scheduler-rhel9:v{product-version}` into a disconnected registry. 
-
-This image is not mirrored as part of NUMA Resources Operator at the moment due to soft dependency limitations for Operator container images. When using the `oc-mirror` the image can be specified in `additionalImages:` section
-====
-
 .Procedure
 . Create the `NUMAResourcesScheduler` custom resource that deploys the NUMA-aware custom pod scheduler:
 
@@ -27,8 +20,16 @@ kind: NUMAResourcesScheduler
 metadata:
   name: numaresourcesscheduler
 spec:
-  imageSpec: "registry.redhat.io/openshift4/noderesourcetopology-scheduler-rhel9:v{product-version}"
+  imageSpec: "registry.redhat.io/openshift4/noderesourcetopology-scheduler-rhel9:v{product-version}" <1>
 ----
++
+<1> In a disconnected environment make sure to configure resolution of this image by either:
+
+* creating a `ImageTagMirrorSet` custom resource (CR) 
+  
+  or
+
+* setting the URL pointing to the disconnected registry
 
 .. Create the `NUMAResourcesScheduler` CR by running the following command:
 +

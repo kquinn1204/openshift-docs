@@ -1,0 +1,61 @@
+// Module included in the following assemblies:
+//
+// * openshift_images/image-configuration.adoc
+// * updating/updating_a_cluster/updating_disconnected_cluster/disconnected-update.adoc
+// * windows_containers/enabling-windows-container-workloads.adoc
+
+:_mod-docs-content-type: PROCEDURE
+[id="images-configuring-registry-mirror-configuring_{context}"]
+= Configuring ImageTagMirrorSet 
+
+Create postinstallation mirror configuration custom resources (CR) to redirect image pull requests from a source image registry to a mirrored image registry.
+
+.Procedure
+
+. Configure mirrored repositories, by either:
++
+--
+* Setting up a mirrored repository with Red Hat Quay, as described in link:https://access.redhat.com/documentation/en-us/red_hat_quay/3/html/manage_red_hat_quay/repo-mirroring-in-red-hat-quay[Red Hat Quay Repository Mirroring]. Using Red Hat Quay allows you to copy images from one repository to another and also automatically sync those repositories repeatedly over time.
+
+* Using a tool such as `skopeo` to copy images manually from the source repository to the mirrored repository.
++
+For example, after installing the skopeo RPM package on a Red Hat Enterprise Linux (RHEL) 7 or RHEL 8 system, use the `skopeo` command as shown in this example:
++
+[source,terminal]
+----
+$ skopeo copy --all \
+docker://registry.access.redhat.com/ubi9/ubi-minimal:latest@sha256:5cf... \
+docker://example.io/example/ubi-minimal
+----
++
+In this example, you have a container image registry that is named `example.io` with an image repository named `example` to which you want to copy the `ubi9/ubi-minimal` image from `registry.access.redhat.com`. After you create the mirrored registry, you can configure your {product-title} cluster to redirect requests made of the source repository to the mirrored repository.
+--
+
+. Create a postinstallation mirror configuration CR, by using one of the following examples:
+
+* Create an `ImageTagMirrorSet` CR, replacing the source and mirrors with your own registry and repository pairs and images:
++
+[source,yaml]
+----
+apiVersion: config.openshift.io/v1 
+kind: ImageTagMirrorSet
+metadata:
+  name: ubi9repo
+spec:
+  metadata:
+  name: generic-0
+spec:
+  imageTagMirrors:
+  - mirrors:
+    - quay.local:8443/mirroruser/openshift4/noderesourcetopology-scheduler-rhel9 <1>
+    source: registry.redhat.io/openshift4/noderesourcetopology-scheduler-rhel9 <2>
+----
+<1> Indicates the name of the mirrored image registry and repository.
+<2> Indicates the registry and repository source, which is the repository that is referred to in an image pull specification.
+
+. Create the new object:
++
+[source,terminal]
+----
+$ oc create -f registryrepomirror.yaml
+----
