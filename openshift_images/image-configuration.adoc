@@ -38,4 +38,6 @@ endif::openshift-rosa,openshift-dedicated[]
 
 include::modules/images-configuration-registry-mirror-configuring.adoc[leveloffset=+2]
 
+include::modules/nro-configuring-registry-imagetagmirrorset.adoc[leveloffset=+2]
+
 include::modules/images-configuration-registry-mirror-convert.adoc[leveloffset=+2]

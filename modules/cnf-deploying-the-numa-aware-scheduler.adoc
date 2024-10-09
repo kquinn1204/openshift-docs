@@ -23,13 +23,13 @@ spec:
   imageSpec: "registry.redhat.io/openshift4/noderesourcetopology-scheduler-rhel9:v{product-version}" <1>
 ----
 +
-<1> In a disconnected environment make sure to configure resolution of this image by either:
+<1> In a disconnected environment make sure to configure the resolution of this image by either:
 
 * creating a `ImageTagMirrorSet` custom resource (CR) 
   
   or
 
-* setting the URL pointing to the disconnected registry
+* setting the URL to the disconnected registry
 
 .. Create the `NUMAResourcesScheduler` CR by running the following command:
 +
