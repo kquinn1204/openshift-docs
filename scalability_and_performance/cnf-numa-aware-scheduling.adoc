@@ -33,6 +33,8 @@ include::modules/cnf-creating-nrop-cr.adoc[leveloffset=+2]
 
 include::modules/cnf-deploying-the-numa-aware-scheduler.adoc[leveloffset=+2]
 
+include::modules/nro-configuring-registry-imagetagmirrorset.adoc[leveloffset=+2]
+
 include::modules/cnf-configuring-single-numa-policy.adoc[leveloffset=+2]
 
 .Additional resources

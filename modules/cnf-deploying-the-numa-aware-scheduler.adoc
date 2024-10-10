@@ -26,9 +26,9 @@ spec:
 <1> In a disconnected environment make sure to configure the resolution of this image by either:
 
 * creating a `ImageTagMirrorSet` custom resource (CR) 
-  
-  or
-
++ 
+or
++
 * setting the URL to the disconnected registry
 
 .. Create the `NUMAResourcesScheduler` CR by running the following command:
