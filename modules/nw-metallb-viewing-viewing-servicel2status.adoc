@@ -17,7 +17,7 @@ The ServiceL2Status CR provides details about which node is advertising a servic
 ----
 $ oc get ServiceL2Status -n metallb-system
 ----
-
++
 .Example output: 
 + 
 [source,terminal]
@@ -32,6 +32,7 @@ nginx-service-worker0   metallb.io/node=worker0,metallb.io/service=nginx-service
 ----
 $ oc get servicel2status nginx-service-worker0 -n metallb-system -o yaml
 ----
++
 .Example output: 
 + 
 [source,yaml]
