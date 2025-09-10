@@ -4,7 +4,7 @@
 
 :_mod-docs-content-type: CONCEPT
 [id="nw-metallb-status-reporting_{context}"]
-= About the IPAddressPool custom resource
+= Understanding MetalLB status custom resources
 
 MetalLB exposes status information for several key components, providing a comprehensive view of its configuration and operation:
 

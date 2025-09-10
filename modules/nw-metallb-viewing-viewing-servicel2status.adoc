@@ -52,6 +52,7 @@ status:
         - eth0
 
 ----
++
 <1> This label identifies the node that is advertising the service. This is useful for troubleshooting to verify which node is the announcer.
 <2> This label identifies the service that is being advertised.
 <3> This field confirms the name of the node advertising the service.
