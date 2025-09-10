@@ -1,6 +1,6 @@
 :_mod-docs-content-type: PROCEDURE
 [id="nw-metallb-configure-address-pool_{context}"]
-= Configuring an address pool
+= Viewing IPAddressPool 
 
 As a cluster administrator, you can add address pools to your cluster to control the IP addresses that MetalLB can assign to load-balancer services. This worked example shows how to create an `IPAddressPool` custom resource (CR) and view its status. The advertisement mode is set to L2. 
 
