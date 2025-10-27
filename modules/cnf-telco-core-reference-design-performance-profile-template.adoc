@@ -8,8 +8,7 @@
 
 The following performance profile configures node-level performance settings for {product-title} clusters on commodity hardware to host telco core workloads.
 
-.Telco core reference design performance profile
-[source,yaml]
+[source,yaml, title="Telco Core Reference Design Performance Profile"]
 ----
 include::snippets/ztp_PerformanceProfile.yaml[]
 ----

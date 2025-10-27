@@ -15,8 +15,7 @@ Initially, you can use the PPC tool to process the `must-gather` data to display
 
 You can use this information to help you configure the performance profile.
 
-.Running the PPC
-Specify performance configuration arguments to the PPC tool to generate a proposed performance profile that is appropriate for your hardware, topology, and use-case.
+To generate an optimized performance profile, run the PPC tool and provide configuration arguments tailored to your specific hardware, topology, and use case.
 
 You can run the PPC by using one of the following methods:
 

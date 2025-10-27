@@ -147,8 +147,6 @@ Password: <password>
 $ ./run-perf-profile-creator.sh -h
 ----
 +
-.Example output
-+
 [source,terminal]
 ----
 Wrapper usage:
@@ -195,7 +193,6 @@ $ ./run-perf-profile-creator.sh -t /<path_to_must_gather_dir>/must-gather.tar.gz
 +
 * `-t /<path_to_must_gather_dir>/must-gather.tar.gz` specifies the path to directory containing the must-gather tarball. This is a required argument for the wrapper script.
 +
-.Example output
 [source,terminal]
 ----
 level=info msg="Cluster info:"
@@ -236,7 +233,6 @@ This example uses sample PPC arguments and values.
 ====
 The `mcp-name` argument in this example is set to `worker-cnf` based on the output of the command `oc get mcp`. For {sno} use `--mcp-name=master`.
 ====
-// Can't the MCP name be whatever the user wants, regardless of SNO vs multi-mode?
 
 . Review the created YAML file by running the following command:
 +
@@ -244,7 +240,6 @@ The `mcp-name` argument in this example is set to `worker-cnf` based on the outp
 ----
 $ cat my-performance-profile.yaml
 ----
-.Example output
 +
 [source,yaml]
 ----
@@ -279,7 +274,6 @@ spec:
 $ oc apply -f my-performance-profile.yaml
 ----
 +
-.Example output
 [source,terminal]
 ----
 performanceprofile.performance.openshift.io/performance created

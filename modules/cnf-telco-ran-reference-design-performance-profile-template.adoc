@@ -8,7 +8,6 @@
 
 The following performance profile configures node-level performance settings for {product-title} clusters on commodity hardware to host telco RAN DU workloads.
 
-.Telco RAN DU reference design performance profile
 [source,yaml]
 ----
 include::snippets/ztp_PerformanceProfile.yaml[]

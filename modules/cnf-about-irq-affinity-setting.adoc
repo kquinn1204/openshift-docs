@@ -28,7 +28,6 @@ If the effective affinity of any IRQ is set to an isolated CPU, it might be a si
 $ find /proc/irq -name effective_affinity -printf "%p: " -exec cat {} \;
 ----
 
-.Example output
 
 [source,terminal]
 ----
