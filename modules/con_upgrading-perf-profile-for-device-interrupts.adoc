@@ -8,6 +8,9 @@
 [id="use-device-interrupt-processing-for-isolated-cpus_{context}"]
 = Upgrading the performance profile to use device interrupt processing
 
+[role="_abstract"]
+When you upgrade performance profiles from v1 or v1alpha1 to v2, the globallyDisableIrqLoadBalancing field is automatically set to true to maintain IRQ load balancing behavior for isolated CPUs.
+
 When you upgrade the Node Tuning Operator performance profile custom resource definition (CRD) from v1 or v1alpha1 to v2, `globallyDisableIrqLoadBalancing` is set to `true` on existing profiles.
 
 [NOTE]

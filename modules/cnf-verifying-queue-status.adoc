@@ -7,7 +7,7 @@
 = Verifying the queue status
 
 [role="_abstract"]
-In this section, a number of examples illustrate different performance profiles and how to verify the changes are applied.
+Verify that NIC queue configurations are correctly applied by checking queue status with ethtool after deploying performance profiles with different device targeting strategies.
 
 .Procedure
 

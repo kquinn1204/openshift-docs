@@ -6,6 +6,9 @@
 [id="cnf-create-performance-profiles_{context}"]
 = Creating a performance profile
 
+[role="_abstract"]
+You can create performance profiles to optimize node performance for low latency workloads by using the Performance Profile Creator tool, which generates profiles based on your hardware topology and use case requirements.
+
 You can create a cluster performance profile by using the Performance Profile Creator (PPC) tool. The PPC is a function of the Node Tuning Operator.
 
 The PPC combines information about your cluster with user-supplied configurations to generate a performance profile that is appropriate to your hardware, topology and use-case.
