@@ -36,7 +36,7 @@ include::modules/cnf-telco-ran-reference-design-performance-profile-template.ado
 
 include::modules/cnf-telco-core-reference-design-performance-profile-template.adoc[leveloffset=+3]
 
-/ REPLACE the old include for the module that contained all four sections with the following:
+// REPLACE the old include for the module that contained all four sections with the following:
 
 // Original: include::modules/cnf-use-device-interrupt-processing-for-isolated-cpus.adoc[leveloffset=+1]
 // The first module is the primary section, starting at the original section's level.
