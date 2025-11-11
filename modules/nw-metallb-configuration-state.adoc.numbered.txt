@@ -1,0 +1,121 @@
+     1	// Module included in the following assemblies:
+     2	//
+     3	// * networking/metallb/monitoring-metallb-status.adoc
+     4	
+     5	:_mod-docs-content-type: PROCEDURE
+     6	[id="nw-metallb-configuration-state_{context}"]
+     7	= Viewing ConfigurationState
+     8	
+     9	[role="_abstract"]
+    10	You can view the ConfigurationState custom resource to quickly identify configuration errors in your MetalLB deployment without reviewing component logs. This helps you troubleshoot issues with global settings and node-specific configurations.
+    11	
+    12	The ConfigurationState Custom Resource (CR) provides a clear, top-level indicator of the health of your MetalLB configuration across all components. It is designed to surface configuration errors that originate from user input, making them easy to spot without needing to dig through component logs.
+    13	
+    14	== Key Concepts
+    15	
+    16	MetalLB creates one ConfigurationState resource for the Controller and one for each Speaker running on your nodes.
+    17	
+    18	Controller Status:: Tracks configuration errors related to global settings, primarily IPAddressPool conflicts (e.g., overlapping CIDRs).
+    19	
+    20	Speaker Status:: Tracks configuration errors specific to the node it's running on, such as transient errors related to BGP (e.g., referencing a BFD profile or secret that does not exist yet).
+    21	
+    22	.Prerequisites
+    23	
+    24	* You have an {product-title} cluster with the MetalLB Operator installed.
+    25	* You have at least one MetalLB Custom Resource (CR) instance created.
+    26	
+    27	.Procedure
+    28	
+    29	. View the status of all ConfigurationState CRs.
+    30	+
+    31	Run the following command to see a summary of all component statuses:
+    32	+
+    33	[source,terminal]
+    34	----
+    35	$ oc get configurationstates -n metallb-system
+    36	----
+    37	+
+    38	.Example output (Healthy):
+    39	+
+    40	[source,terminal]
+    41	----
+    42	NAME                    RESULT    LASTERROR   AGE
+    43	controller              Valid                 5m
+    44	speaker-kind-worker     Valid                 5m
+    45	speaker-kind-worker2    Valid                 5m
+    46	----
+    47	
+    48	. View the details for a specific ConfigurationState CR.
+    49	+
+    50	To inspect the status of the controller or a specific speaker, use the name of the resource.
+    51	
+    52	.. Controller Status Check (Example of an error):
+    53	+
+    54	[source,terminal]
+    55	----
+    56	$ oc get configurationstate controller -n metallb-system -o yaml
+    57	----
+    58	+
+    59	.Example output (Invalid):
+    60	+
+    61	[source,yaml]
+    62	----
+    63	apiVersion: metallb.io/v1beta1
+    64	kind: ConfigurationState
+    65	metadata:
+    66	  name: controller
+    67	  namespace: metallb-system
+    68	  labels:
+    69	    metallb.io/component-type: controller
+    70	status:
+    71	  result: "Invalid"
+    72	  lastError: "failed to parse configuration: CIDR \"192.168.10.100/32\" in pool \"client2-pool\" overlaps with already defined CIDR \"192.168.10.0/24\""
+    73	----
+    74	
+    75	.. Speaker Status Check (Example of an error):
+    76	+
+    77	[source,terminal]
+    78	----
+    79	$ oc get configurationstate speaker-kind-worker2 -n metallb-system -o yaml
+    80	----
+    81	+
+    82	.Example output (Invalid):
+    83	+
+    84	[source,yaml]
+    85	----
+    86	apiVersion: metallb.io/v1beta1
+    87	kind: ConfigurationState
+    88	metadata:
+    89	  name: speaker-kind-worker2
+    90	  namespace: metallb-system
+    91	  labels:
+    92	    metallb.io/component-type: speaker
+    93	    metallb.io/node-name: kind-worker2
+    94	status:
+    95	  result: "Invalid"
+    96	  lastError: "peer peer1 referencing non existing bfd profile my-bfd-profile"
+    97	----
+    98	
+    99	.Status Field Explanations
+   100	
+   101	The status section reports the current validation state:
+   102	
+   103	|===
+   104	|Field |Type |Description
+   105	
+   106	|result
+   107	|string
+   108	|Indicates the configuration validation outcome. Possible values are: Valid (configuration is successfully applied), Invalid (configuration has errors that need user intervention), or Unknown (component is initializing or not reporting state).
+   109	
+   110	|lastError
+   111	|string
+   112	|Contains a detailed error message from the last configuration failure. This field is empty when result is Valid.
+   113	|===
+   114	
+   115	== Troubleshooting Configuration Errors
+   116	
+   117	This CR is most valuable for identifying two main types of user errors:
+   118	
+   119	Direct Validation Errors (Fix required):: Errors where the configuration is fundamentally incorrect (e.g., overlapping IP ranges in a pool, or a BGP secret exists but has the wrong type).
+   120	
+   121	Transient Errors (Self-resolving):: Errors that occur because one resource references another that has not yet been fully created. For example, if a BGPPeer references a BFDProfile that you have not applied yet, the ConfigurationState will initially show Invalid. This error automatically resolves when the missing resource is created.

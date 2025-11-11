@@ -1,0 +1,26 @@
+     1	:_mod-docs-content-type: ASSEMBLY
+     2	[id=monitoring-metallb-status"]
+     3	= Monitoring MetalLB configuration status
+     4	include::_attributes/common-attributes.adoc[]
+     5	:context: monitor-metallb-config-status
+     6	
+     7	toc::[]
+     8	
+     9	As an {product-title} system administrator, you can gain insights into the operational status of your MetalLB deployments by examining the status of its Custom Resources (CRs). This helps you troubleshoot IP address allocation, L2 advertisements, and BGP session status.
+    10	
+    11	For more information about how to install the MetalLB Operator, see xref:../../../networking/networking_operators/metallb-operator/about-metallb.adoc#about-metallb[About MetalLB and the MetalLB Operator].
+    12	
+    13	// Address pool custom resource
+    14	include::modules/nw-metallb-status-reporting.adoc[leveloffset=+1]
+    15	
+    16	// View ConfigurationState
+    17	include::modules/nw-metallb-configuration-state.adoc[leveloffset=+1]
+    18	
+    19	// Add an address pool
+    20	include::modules/nw-metallb-viewing-ipaddresspool-status.adoc[leveloffset=+1]
+    21	
+    22	// View ServiceL2Status
+    23	include::modules/nw-metallb-viewing-viewing-servicel2status.adoc[leveloffset=+1]
+    24	
+    25	// View BGPPeerStatus
+    26	include::modules/nw-metallb-viewing-viewing-bgppeerstatus.adoc[leveloffset=+1]

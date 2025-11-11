@@ -1,0 +1,204 @@
+     1	:_mod-docs-content-type: PROCEDURE
+     2	[id="nw-metallb-configure-address-pool_{context}"]
+     3	= Viewing IPAddressPool
+     4	
+     5	[role="_abstract"]
+     6	You can monitor IP address allocation from your MetalLB pools by viewing the IPAddressPool status, which shows how many addresses are assigned to services and how many remain available for assignment.
+     7	
+     8	As a cluster administrator, you can add address pools to your cluster to control the IP addresses that MetalLB can assign to load-balancer services. This worked example shows how to create an `IPAddressPool` custom resource (CR) and view its status. The advertisement mode is set to L2. 
+     9	
+    10	.Prerequisites
+    11	
+    12	* You have an {product-title} cluster with the MetalLB Operator installed.
+    13	* You have at least one MetalLB Custom Resource (CR) instance created.
+    14	
+    15	.Procedure
+    16	
+    17	The `IPAddressPool` CR's status section provides details about IP address allocation from a specific pool.
+    18	
+    19	.Procedure
+    20	
+    21	. Create an IP address pool.
+    22	
+    23	.. Create a file, such as `ipaddresspool.yaml`, with content like the following example:
+    24	+
+    25	[source,yaml]
+    26	----
+    27	apiVersion: metallb.io/v1beta1
+    28	kind: IPAddressPool
+    29	metadata:
+    30	  name: doc-example-l2
+    31	  namespace: metallb-system
+    32	spec:
+    33	  addresses:
+    34	  - 192.168.122.200-192.168.122.220
+    35	  autoAssign: true
+    36	  avoidBuggyIPs: false
+    37	----
+    38	
+    39	.. Apply the configuration for the IP address pool:
+    40	+
+    41	[source,terminal]
+    42	----
+    43	$ oc apply -f ipaddresspool.yaml
+    44	----
+    45	
+    46	. View the status of the IP address pool by running the following command:
+    47	+
+    48	[source,terminal]
+    49	----
+    50	$ oc get ipaddresspool doc-example-l2 -n metallb-system -o yaml
+    51	----
+    52	+
+    53	.Example output:
+    54	+
+    55	[source,yaml]
+    56	----
+    57	apiVersion: metallb.io/v1beta1
+    58	kind: IPAddressPool
+    59	metadata:
+    60	  annotations:
+    61	    kubectl.kubernetes.io/last-applied-configuration: |
+    62	      {"apiVersion":"metallb.io/v1beta1","kind":"IPAddressPool","metadata":{"annotations":{},"name":"doc-example-l2","namespace":"metallb-system"},"spec":{"addresses":["192.168.122.200-192.168.122.220"],"autoAssign":true,"avoidBuggyIPs":false}}
+    63	  creationTimestamp: "2025-07-17T10:13:37Z"
+    64	  generation: 1
+    65	  name: doc-example-l2
+    66	  namespace: metallb-system
+    67	  resourceVersion: "29080"
+    68	  uid: 8df1c303-03ac-4d31-8970-6dacdb173dc2
+    69	spec:
+    70	  addresses:
+    71	  - 192.168.122.200-192.168.122.220
+    72	  autoAssign: true
+    73	  avoidBuggyIPs: false
+    74	status: 
+    75	  assignedIPv4: 0 <1>
+    76	  assignedIPv6: 0 <2>
+    77	  availableIPv4: 21 <3>
+    78	  availableIPv6: 0 <4>
+    79	----
+    80	<1> This integer represents the total number of IPv4 addresses that have been successfully assigned by MetalLB from this pool to LoadBalancer services.
+    81	<2> This integer represents the total number of IPv6 addresses that have been successfully assigned by MetalLB from this pool to LoadBalancer services.
+    82	<3> This integer indicates the total number of IPv4 addresses remaining and available for assignment within this pool. This value is calculated by subtracting assignedIPv4 from the total theoretical IPv4 addresses in the spec.addresses ranges, potentially accounting for avoidBuggyIPs if enabled.
+    83	<4> This integer indicates the total number of IPv6 addresses remaining and available for assignment within this pool. This value is calculated similarly to availableIPv4, based on the total theoretical IPv6 addresses in the spec.addresses ranges.
+    84	
+    85	. Create a L2Advertisement for Layer 2 mode with the following sample YAML:
+    86	+
+    87	[source,yaml]
+    88	----
+    89	apiVersion: metallb.io/v1beta1
+    90	kind: L2Advertisement
+    91	metadata:
+    92	  name: l2advertisement
+    93	  namespace: metallb-system
+    94	spec:
+    95	  ipAddressPools:
+    96	  - doc-example-l2
+    97	----
+    98	
+    99	.. Apply the configuration for the L2 advertisement:
+   100	+
+   101	[source,terminal]
+   102	----
+   103	$ oc apply -f l2advertisement.yaml
+   104	----
+   105	
+   106	. Deploy an application and expose it with a LoadBalancer service.
+   107	
+   108	.. Create a file, such as `nginx.yaml`, with the following content to deploy an Nginx application:
+   109	+
+   110	[source,yaml]
+   111	----
+   112	apiVersion: apps/v1
+   113	kind: Deployment
+   114	metadata:
+   115	  name: nginx-deployment
+   116	  labels:
+   117	    app: nginx
+   118	spec:
+   119	  replicas: 2
+   120	  selector:
+   121	    matchLabels:
+   122	      app: nginx
+   123	  template:
+   124	    metadata:
+   125	      labels:
+   126	        app: nginx
+   127	    spec:
+   128	      containers:
+   129	      - name: nginx
+   130	        image: nginx:latest
+   131	        ports:
+   132	        - containerPort: 80
+   133	----    
+   134	
+   135	.. Apply the configuration by running the following command:
+   136	+
+   137	[source,terminal]
+   138	----
+   139	$ oc apply -f nginx.yaml
+   140	----
+   141	
+   142	.. Expose the deployment as a LoadBalancer service by creating a file, such as `nginx-service.yaml`, with content like the following:
+   143	+
+   144	[source,yaml]
+   145	----
+   146	apiVersion: v1
+   147	kind: Service
+   148	metadata:
+   149	  name: nginx-service
+   150	  namespace: metallb-system # Or the namespace where your deployment is
+   151	  annotations:
+   152	    metallb.universe.tf/address-pool: doc-example-l2 # Explicitly tells MetalLB to use your specific IPAddressPool
+   153	spec:
+   154	  selector:
+   155	    app: nginx # Must match the labels of your deployment
+   156	  ports:
+   157	    - protocol: TCP
+   158	      port: 80
+   159	      targetPort: 80
+   160	  type: LoadBalancer
+   161	----
+   162	
+   163	.. Apply the service configuration by running the following command:
+   164	+
+   165	[source,terminal]
+   166	----
+   167	$ oc apply -f nginx-service.yaml
+   168	----
+   169	
+   170	. View the updated `IPAddressPool` status to see the assigned and available IP addresses by running the following command:
+   171	+
+   172	[source,terminal]
+   173	----
+   174	$ oc get ipaddresspool doc-example-l2 -n metallb-system -o yaml
+   175	----
+   176	+
+   177	.Example output:
+   178	+
+   179	[source,yaml]
+   180	----
+   181	apiVersion: metallb.io/v1beta1
+   182	kind: IPAddressPool
+   183	metadata:
+   184	  annotations:
+   185	    kubectl.kubernetes.io/last-applied-configuration: |
+   186	      {"apiVersion":"metallb.io/v1beta1","kind":"IPAddressPool","metadata":{"annotations":{},"name":"doc-example-l2","namespace":"metallb-system"},"spec":{"addresses":["192.168.122.200-192.168.122.220"],"autoAssign":true,"avoidBuggyIPs":false}}
+   187	  creationTimestamp: "2025-07-17T10:13:37Z"
+   188	  generation: 1
+   189	  name: doc-example-l2
+   190	  namespace: metallb-system
+   191	  resourceVersion: "30250"
+   192	  uid: 8df1c303-03ac-4d31-8970-6dacdb173dc2
+   193	spec:
+   194	  addresses:
+   195	  - 192.168.122.200-192.168.122.220
+   196	  autoAssign: true
+   197	  avoidBuggyIPs: false
+   198	status:
+   199	  assignedIPv4: 1 <1>
+   200	  assignedIPv6: 0
+   201	  availableIPv4: 20
+   202	  availableIPv6: 0
+   203	----
+   204	<1> This value indicates that one IPv4 address from this pool has been successfully assigned by MetalLB to your `nginx-service` LoadBalancer. This confirms that MetalLB has allocated an IP and it is in use.

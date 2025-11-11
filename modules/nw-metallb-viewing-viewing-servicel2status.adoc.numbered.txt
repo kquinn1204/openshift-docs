@@ -1,0 +1,62 @@
+     1	:_mod-docs-content-type: PROCEDURE
+     2	[id="nw-viewing-service-l2-status_{context}"]
+     3	= Viewing ServiceL2Status
+     4	
+     5	[role="_abstract"]
+     6	You can verify which node is advertising your service in Layer 2 mode by checking the ServiceL2Status custom resource. This helps you troubleshoot L2 advertisement issues and confirm the expected announcer node.
+     7	
+     8	The ServiceL2Status CR provides details about which node is advertising a service using Layer 2 mode. This is useful for troubleshooting to confirm that the correct node is acting as the announcer.
+     9	
+    10	.Prerequisites
+    11	
+    12	* You have an {product-title} cluster with the MetalLB Operator installed.
+    13	* You have at least one MetalLB Custom Resource (CR) instance created.
+    14	
+    15	.Procedure
+    16	
+    17	. View the status of the ServiceL2Status CR by running the following command:
+    18	+ 
+    19	[source,terminal]
+    20	----
+    21	$ oc get ServiceL2Status -n metallb-system
+    22	----
+    23	+
+    24	.Example output: 
+    25	+ 
+    26	[source,terminal]
+    27	----
+    28	NAME                    LABELS                                                   AGE 
+    29	nginx-service-worker0   metallb.io/node=worker0,metallb.io/service=nginx-service 5h
+    30	----
+    31	
+    32	. View the details of the ServiceL2Status CR for your service: 
+    33	+ 
+    34	[source,terminal]
+    35	----
+    36	$ oc get servicel2status nginx-service-worker0 -n metallb-system -o yaml
+    37	----
+    38	+
+    39	.Example output: 
+    40	+ 
+    41	[source,yaml]
+    42	----
+    43	apiVersion: metallb.io/v1beta1
+    44	kind: ServiceL2Status
+    45	metadata:
+    46	  name: nginx-service-worker0
+    47	  namespace: metallb-system
+    48	  labels:
+    49	    metallb.io/node: worker0 <1>
+    50	    metallb.io/service: nginx-service <2>
+    51	spec: {}
+    52	status:
+    53	    node: worker0 <3>
+    54	    interfaces: <4>
+    55	        - eth0
+    56	
+    57	----
+    58	+
+    59	<1> This label identifies the node that is advertising the service. This is useful for troubleshooting to verify which node is the announcer.
+    60	<2> This label identifies the service that is being advertised.
+    61	<3> This field confirms the name of the node advertising the service.
+    62	<4> This field lists the network interfaces on the announcing node that are used for the advertisement. If the field is empty, it means all interfaces on the node are being used for the advertisement.
