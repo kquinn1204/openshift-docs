@@ -13,6 +13,9 @@ For more information about how to install the MetalLB Operator, see xref:../../.
 // Address pool custom resource
 include::modules/nw-metallb-status-reporting.adoc[leveloffset=+1]
 
+// View ConfigurationState
+include::modules/nw-metallb-configuration-state.adoc[leveloffset=+1]
+
 // Add an address pool
 include::modules/nw-metallb-viewing-ipaddresspool-status.adoc[leveloffset=+1]
 
