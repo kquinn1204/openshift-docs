@@ -1,6 +1,9 @@
 :_mod-docs-content-type: PROCEDURE
 [id="nw-metallb-configure-address-pool_{context}"]
-= Viewing IPAddressPool 
+= Viewing IPAddressPool
+
+[role="_abstract"]
+You can monitor IP address allocation from your MetalLB pools by viewing the IPAddressPool status, which shows how many addresses are assigned to services and how many remain available for assignment.
 
 As a cluster administrator, you can add address pools to your cluster to control the IP addresses that MetalLB can assign to load-balancer services. This worked example shows how to create an `IPAddressPool` custom resource (CR) and view its status. The advertisement mode is set to L2. 
 
@@ -47,7 +50,7 @@ $ oc apply -f ipaddresspool.yaml
 $ oc get ipaddresspool doc-example-l2 -n metallb-system -o yaml
 ----
 +
-.Example output:
+The output is similar to the following:
 +
 [source,yaml]
 ----
@@ -68,16 +71,19 @@ spec:
   - 192.168.122.200-192.168.122.220
   autoAssign: true
   avoidBuggyIPs: false
-status: 
-  assignedIPv4: 0 <1>
-  assignedIPv6: 0 <2>
-  availableIPv4: 21 <3>
-  availableIPv6: 0 <4>
+status:
+  assignedIPv4: 0
+  assignedIPv6: 0
+  availableIPv4: 21
+  availableIPv6: 0
 ----
-<1> This integer represents the total number of IPv4 addresses that have been successfully assigned by MetalLB from this pool to LoadBalancer services.
-<2> This integer represents the total number of IPv6 addresses that have been successfully assigned by MetalLB from this pool to LoadBalancer services.
-<3> This integer indicates the total number of IPv4 addresses remaining and available for assignment within this pool. This value is calculated by subtracting assignedIPv4 from the total theoretical IPv4 addresses in the spec.addresses ranges, potentially accounting for avoidBuggyIPs if enabled.
-<4> This integer indicates the total number of IPv6 addresses remaining and available for assignment within this pool. This value is calculated similarly to availableIPv4, based on the total theoretical IPv6 addresses in the spec.addresses ranges.
++
+The `status` section includes the following fields:
++
+* `assignedIPv4` represents the total number of IPv4 addresses that have been successfully assigned by MetalLB from this pool to LoadBalancer services.
+* `assignedIPv6` represents the total number of IPv6 addresses that have been successfully assigned by MetalLB from this pool to LoadBalancer services.
+* `availableIPv4` indicates the total number of IPv4 addresses remaining and available for assignment within this pool. This value is calculated by subtracting `assignedIPv4` from the total theoretical IPv4 addresses in the `spec.addresses` ranges, potentially accounting for `avoidBuggyIPs` if enabled.
+* `availableIPv6` indicates the total number of IPv6 addresses remaining and available for assignment within this pool. This value is calculated similarly to `availableIPv4`, based on the total theoretical IPv6 addresses in the `spec.addresses` ranges.
 
 . Create a L2Advertisement for Layer 2 mode with the following sample YAML:
 +
@@ -171,7 +177,7 @@ $ oc apply -f nginx-service.yaml
 $ oc get ipaddresspool doc-example-l2 -n metallb-system -o yaml
 ----
 +
-.Example output:
+The output is similar to the following:
 +
 [source,yaml]
 ----
@@ -193,9 +199,10 @@ spec:
   autoAssign: true
   avoidBuggyIPs: false
 status:
-  assignedIPv4: 1 <1>
+  assignedIPv4: 1
   assignedIPv6: 0
   availableIPv4: 20
   availableIPv6: 0
 ----
-<1> This value indicates that one IPv4 address from this pool has been successfully assigned by MetalLB to your `nginx-service` LoadBalancer. This confirms that MetalLB has allocated an IP and it is in use.
++
+The `assignedIPv4` value of `1` indicates that one IPv4 address from this pool has been successfully assigned by MetalLB to your `nginx-service` LoadBalancer, confirming that MetalLB has allocated an IP and it is in use.

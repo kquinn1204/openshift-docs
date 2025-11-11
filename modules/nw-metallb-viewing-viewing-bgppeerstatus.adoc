@@ -2,6 +2,9 @@
 [id="nw-viewing-service-bgp-status_{context}"]
 = Viewing ServiceBGPStatus
 
+[role="_abstract"]
+You can verify BGP advertisement status for your services by viewing the ServiceBGPStatus custom resource, which shows which BGP peers are receiving advertisements from each node. This is essential for debugging connectivity in Telco environments.
+
 The ServiceBGPStatus CR provides insights into which BGP peers a specific service is being advertised to from a given node. This is a crucial tool for network administrators in Telco environments to verify BGP advertisement and debug connectivity.
 
 .Prerequisites
@@ -11,28 +14,30 @@ The ServiceBGPStatus CR provides insights into which BGP peers a specific servic
 
 .Procedure
 
-. View the status of the ServiceBGPStatus CR by running the following command: 
-+ 
+. View the status of the ServiceBGPStatus CR by running the following command:
++
 [source,terminal]
 ----
 $ oc get ServiceBGPStatus -n metallb-system
 ----
-.Example output: 
-+ 
++
+The output is similar to the following:
++
 [source,terminal]
 ----
-NAME                  LABELS                                                   AGE 
+NAME                  LABELS                                                   AGE
 nginx-service-worker0 metallb.io/node=worker0,metallb.io/service=nginx-service 5h
 ----
 
-. View the details of the ServiceBGPStatus CR for your service: 
-+ 
+. View the details of the ServiceBGPStatus CR for your service:
++
 [source,terminal]
 ----
 $ oc get servicebgpstatus nginx-service-worker0 -n metallb-system -o yaml
 ----
-.Example output: 
-+ 
++
+The output is similar to the following:
++
 [source,yaml]
 ----
 apiVersion: metallb.io/v1beta1
@@ -41,14 +46,16 @@ metadata:
   name: service1-worker0
   namespace: servicenamespace
   labels:
-    metallb.io/node: worker0 <1>
-    metallb.io/service: service1 <2>
+    metallb.io/node: worker0
+    metallb.io/service: service1
 status:
-    bgpPeers: <3>
+    bgpPeers:
         - peerA
         - peerB
 ----
-
-<1> This label indicates the node that is advertising the service via BGP.
-<2> This label identifies the service being advertised.
-<3> This field lists the names of the BGP peers to which the service is being advertised. This is useful for confirming that the advertisement is reaching the intended peers.
++
+The output includes the following important fields:
++
+* `metadata.labels.metallb.io/node` indicates the node that is advertising the service via BGP.
+* `metadata.labels.metallb.io/service` identifies the service being advertised.
+* `status.bgpPeers` lists the names of the BGP peers to which the service is being advertised. This is useful for confirming that the advertisement is reaching the intended peers.

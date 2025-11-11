@@ -6,6 +6,9 @@
 [id="nw-metallb-configuration-state_{context}"]
 = Viewing ConfigurationState
 
+[role="_abstract"]
+You can view the ConfigurationState custom resource to quickly identify configuration errors in your MetalLB deployment without reviewing component logs. This helps you troubleshoot issues with global settings and node-specific configurations.
+
 The ConfigurationState Custom Resource (CR) provides a clear, top-level indicator of the health of your MetalLB configuration across all components. It is designed to surface configuration errors that originate from user input, making them easy to spot without needing to dig through component logs.
 
 == Key Concepts
@@ -32,7 +35,7 @@ Run the following command to see a summary of all component statuses:
 $ oc get configurationstates -n metallb-system
 ----
 +
-.Example output (Healthy):
+The output is similar to the following when the configuration is healthy:
 +
 [source,terminal]
 ----
@@ -53,7 +56,7 @@ To inspect the status of the controller or a specific speaker, use the name of t
 $ oc get configurationstate controller -n metallb-system -o yaml
 ----
 +
-.Example output (Invalid):
+The output is similar to the following when the configuration is invalid:
 +
 [source,yaml]
 ----
@@ -76,7 +79,7 @@ status:
 $ oc get configurationstate speaker-kind-worker2 -n metallb-system -o yaml
 ----
 +
-.Example output (Invalid):
+The output is similar to the following when the speaker configuration is invalid:
 +
 [source,yaml]
 ----
@@ -93,9 +96,7 @@ status:
   lastError: "peer peer1 referencing non existing bfd profile my-bfd-profile"
 ----
 
-.Status Field Explanations
-
-The status section reports the current validation state:
+The status section reports the current validation state using the following fields:
 
 |===
 |Field |Type |Description

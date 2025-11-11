@@ -6,6 +6,9 @@
 [id="nw-metallb-status-reporting_{context}"]
 = Understanding MetalLB status custom resources
 
+[role="_abstract"]
+You can gain insights into MetalLB's operational status through custom resources that expose IP address allocation, L2 advertisement status, and BGP session details for your load-balancer services.
+
 MetalLB exposes status information for several key components, providing a comprehensive view of its configuration and operation:
 
 * *`IPAddressPool` Status*: Shows the allocation and availability of IP addresses within a defined pool.
