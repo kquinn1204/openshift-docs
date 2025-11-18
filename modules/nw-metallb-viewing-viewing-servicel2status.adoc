@@ -25,8 +25,8 @@ The output is similar to the following:
 +
 [source,terminal]
 ----
-NAME                    LABELS                                                   AGE
-nginx-service-worker0   metallb.io/node=worker0,metallb.io/service=nginx-service 5h
+NAME       ALLOCATED NODE                SERVICE NAME     SERVICE NAMESPACE
+l2-dbxpc   ip-10-0-98-203.ec2.internal   router-default   openshift-ingress
 ----
 
 . View the details of the ServiceL2Status CR for your service:
@@ -43,22 +43,31 @@ The output is similar to the following:
 apiVersion: metallb.io/v1beta1
 kind: ServiceL2Status
 metadata:
-  name: nginx-service-worker0
-  namespace: metallb-system
+  creationTimestamp: "2025-11-18T13:26:04Z"
+  generateName: l2-
+  generation: 1
   labels:
-    metallb.io/node: worker0
-    metallb.io/service: nginx-service
+    metallb.io/node: ip-10-0-98-203.ec2.internal
+    metallb.io/service-name: router-default
+    metallb.io/service-namespace: openshift-ingress
+  name: l2-dbxpc
+  namespace: metallb-system
+  ownerReferences:
+  - apiVersion: v1
+    kind: Pod
+    name: speaker-h2wm2
+    uid: c7996932-138b-4582-94cf-70af13d91ee9
+  resourceVersion: "77081"
+  uid: 64bbf9f5-0b30-466b-a7aa-a0ff46fa78b2
 spec: {}
 status:
-    node: worker0
-    interfaces:
-        - eth0
-
+  node: ip-10-0-98-203.ec2.internal
+  serviceName: router-default
+  serviceNamespace: openshift-ingress
 ----
 +
 The output includes the following important fields:
 +
 * `metadata.labels.metallb.io/node` identifies the node that is advertising the service. This is useful for troubleshooting to verify which node is the announcer.
-* `metadata.labels.metallb.io/service` identifies the service that is being advertised.
+* `metadata.labels.metallb.io/service-name` identifies the service that is being advertised.
 * `status.node` confirms the name of the node advertising the service.
-* `status.interfaces` lists the network interfaces on the announcing node that are used for the advertisement. If the field is empty, all interfaces on the node are being used for the advertisement.
