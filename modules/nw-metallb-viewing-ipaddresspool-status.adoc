@@ -10,7 +10,19 @@ As a cluster administrator, you can add address pools to your cluster to control
 .Prerequisites
 
 * You have an {product-title} cluster with the MetalLB Operator installed.
-* You have at least one MetalLB Custom Resource (CR) instance created.
+* You have created a MetalLB instance. For example:
++
+[source,yaml]
+----
+apiVersion: metallb.io/v1beta1
+kind: MetalLB
+metadata:
+  name: metallb
+  namespace: metallb-system
+spec: {}
+----
++
+This deploys the MetalLB controller and speaker pods required for status monitoring.
 
 .Procedure
 
@@ -150,18 +162,23 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-service
-  namespace: metallb-system # Or the namespace where your deployment is
+  namespace: default
   annotations:
-    metallb.universe.tf/address-pool: doc-example-l2 # Explicitly tells MetalLB to use your specific IPAddressPool
+    metallb.universe.tf/address-pool: doc-example-l2
 spec:
   selector:
-    app: nginx # Must match the labels of your deployment
+    app: nginx
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
   type: LoadBalancer
 ----
++
+[IMPORTANT]
+====
+The service must be in the same namespace as your application deployment. The `metallb.universe.tf/address-pool` annotation tells MetalLB which IPAddressPool to use for IP allocation.
+====
 
 .. Apply the service configuration by running the following command:
 +

@@ -24,3 +24,6 @@ include::modules/nw-metallb-viewing-viewing-servicel2status.adoc[leveloffset=+1]
 
 // View BGPPeerStatus
 include::modules/nw-metallb-viewing-viewing-bgppeerstatus.adoc[leveloffset=+1]
+
+// Troubleshooting
+include::modules/nw-metallb-status-troubleshooting.adoc[leveloffset=+1]
