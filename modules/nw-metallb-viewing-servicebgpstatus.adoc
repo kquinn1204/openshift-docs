@@ -12,9 +12,26 @@ The `ServiceBGPStatus` CR provides insights into which BGP peers a specific serv
 `ServiceBGPStatus` resources are created in the `metallb-system` namespace, not in the namespace where your LoadBalancer service is deployed. Always query these resources with `-n metallb-system`.
 ====
 
-This example shows how to configure MetalLB for BGP mode to enable `ServiceBGPStatus` monitoring. You need to create an `IPAddressPool`, configure a BGPPeer to connect to your BGP router, and create a BGPAdvertisement to control which pools are advertised.
+.Prerequisites
+
+* You have an {product-title} cluster with the MetalLB Operator installed.
+* You have created a MetalLB instance. For example:
++
+[source,yaml]
+----
+apiVersion: metallb.io/v1beta1
+kind: MetalLB
+metadata:
+  name: metallb
+  namespace: metallb-system
+spec: {}
+----
++
+This deploys the MetalLB controller and speaker pods required for status monitoring.
 
 .Procedure
+
+This example shows how to configure MetalLB for BGP mode, deploy a service, and view the `ServiceBGPStatus` to verify BGP advertisements.
 
 . Create an IPAddressPool for BGP:
 +
@@ -29,6 +46,13 @@ spec:
   addresses:
   - 192.168.122.210-192.168.122.220
   autoAssign: true
+----
+
+. Apply the IPAddressPool configuration:
++
+[source,terminal]
+----
+$ oc apply -f ipaddresspool.yaml
 ----
 
 . Configure a BGP peer to connect to your BGP router:
@@ -48,6 +72,13 @@ spec:
 +
 The `spec:peerAddress` field should be set to the IP address of your BGP router.
 
+. Apply the BGPPeer configuration:
++
+[source,terminal]
+----
+$ oc apply -f bgppeer.yaml
+----
+
 . Create a BGP advertisement to advertise the pool:
 +
 [source,yaml]
@@ -62,59 +93,114 @@ spec:
   - bgp-pool
 ----
 
-. Deploy a LoadBalancer service. `ServiceBGPStatus` resources are created automatically when the service has ready endpoints and begins BGP advertisement.
-
-.Prerequisites
-
-* You have an {product-title} cluster with the MetalLB Operator installed.
-* You have created a MetalLB instance. For example:
-+
-[source,yaml]
-----
-apiVersion: metallb.io/v1beta1
-kind: MetalLB
-metadata:
-  name: metallb
-  namespace: metallb-system
-spec: {}
-----
-+
-This deploys the MetalLB controller and speaker pods required for status monitoring.
-
-.Expected behavior
-
-When you deploy a LoadBalancer service with BGP configuration, the following occurs:
-
-. MetalLB assigns an IP address from the configured IPAddressPool.
-. The service must have at least one ready endpoint (running pod) before BGP advertisement begins.
-. The MetalLB speaker creates a ServiceBGPStatus resource in the `metallb-system` namespace.
-. The status shows which BGP peers are receiving advertisements for this service.
-. One ServiceBGPStatus resource is created per node that is advertising the service.
-
-.Procedure
-
-. View the status of the ServiceBGPStatus CR by running the following command:
+. Apply the BGPAdvertisement configuration:
 +
 [source,terminal]
 ----
-$ oc get ServiceBGPStatus -n metallb-system
+$ oc apply -f bgpadvertisement.yaml
+----
+
+. Deploy an application and expose it with a LoadBalancer service. For this example, create a simple test application:
++
+[source,yaml]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: test-app
+        image: quay.io/openshifttest/hello-openshift:multiarch
+        ports:
+        - containerPort: 8080
+----
+
+. Apply the deployment:
++
+[source,terminal]
+----
+$ oc apply -f deployment.yaml
+----
+
+. Create a LoadBalancer service for the application:
++
+[source,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-service
+  namespace: default
+spec:
+  selector:
+    app: test-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+----
++
+[IMPORTANT]
+====
+`ServiceBGPStatus` resources are created automatically only when the service has at least one ready endpoint (running pod). Ensure your application pods are running before checking for ServiceBGPStatus resources.
+====
+
+. Apply the service configuration:
++
+[source,terminal]
+----
+$ oc apply -f service.yaml
+----
+
+. Verify the service received an external IP:
++
+[source,terminal]
+----
+$ oc get svc test-service -n default
+----
++
+.Example output
++
+[source,terminal]
+----
+NAME           TYPE           CLUSTER-IP       EXTERNAL-IP       PORT(S)        AGE
+test-service   LoadBalancer   172.30.116.108   192.168.122.210   80:32431/TCP   2m
+----
+
+. View the ServiceBGPStatus resources:
++
+[source,terminal]
+----
+$ oc get servicebgpstatus -n metallb-system
 ----
 +
 The output is similar to the following:
 +
 [source,terminal]
 ----
-NAME                  LABELS                                                   AGE
-nginx-service-worker0 metallb.io/node=worker0,metallb.io/service=nginx-service 5h
+NAME                  NODE       SERVICE NAME   SERVICE NAMESPACE
+bgp-xxxxx             worker0    test-service   default
 ----
 +
 [NOTE]
 ====
-ServiceBGPStatus resources are created with generated names (for example, `bgp-xxxxx`). Use labels to find the status for your service:
+ServiceBGPStatus resources are created with generated names. Use labels to find the status for your service:
 
 [source,terminal]
 ----
-$ oc get servicebgpstatus -n metallb-system -l metallb.io/service-name=<your-service-name>
+$ oc get servicebgpstatus -n metallb-system -l metallb.io/service-name=test-service
 ----
 ====
 
@@ -122,7 +208,7 @@ $ oc get servicebgpstatus -n metallb-system -l metallb.io/service-name=<your-ser
 +
 [source,terminal]
 ----
-$ oc get servicebgpstatus nginx-service-worker0 -n metallb-system -o yaml
+$ oc get servicebgpstatus bgp-xxxxx -n metallb-system -o yaml
 ----
 +
 The output is similar to the following:
@@ -132,19 +218,18 @@ The output is similar to the following:
 apiVersion: metallb.io/v1beta1
 kind: ServiceBGPStatus
 metadata:
-  name: service1-worker0
+  name: bgp-xxxxx
   namespace: metallb-system
   labels:
     metallb.io/node: worker0
-    metallb.io/service-name: service1
-    metallb.io/service-namespace: servicenamespace
+    metallb.io/service-name: test-service
+    metallb.io/service-namespace: default
 status:
   node: worker0
   peers:
-  - peerA
-  - peerB
-  serviceName: service1
-  serviceNamespace: servicenamespace
+  - bgp-peer
+  serviceName: test-service
+  serviceNamespace: default
 ----
 +
 The output includes the following important fields:
