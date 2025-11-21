@@ -43,19 +43,6 @@ $ oc get pods -n metallb-system -l component=speaker
 $ oc logs -n metallb-system -l component=speaker --tail=50 | grep bgp
 ----
 
-== ServiceL2Status not appearing
-
-ServiceL2Status resources are only created when using Layer 2 mode with L2Advertisement. If no resources appear:
-
-* Verify you have created an L2Advertisement referencing your IPAddressPool:
-+
-[source,terminal]
-----
-$ oc get l2advertisement -n metallb-system
-----
-
-* Ensure your service has ready endpoints, similar to the BGP case above.
-
 == IPAddressPool status shows 0 available addresses
 
 If your IPAddressPool shows `availableIPv4: 0` or `availableIPv6: 0`, check the following:
