@@ -3,18 +3,18 @@
 = Viewing ServiceBGPStatus
 
 [role="_abstract"]
-You can verify BGP advertisement status for your services by viewing the ServiceBGPStatus custom resource, which shows which BGP peers are receiving advertisements from each node. This is essential for debugging connectivity in Telco environments.
+You can verify BGP advertisement status for your services by viewing the `ServiceBGPStatus` custom resource, which shows which BGP peers are receiving advertisements from each node. This is essential for debugging connectivity in Telco environments.
 
-The ServiceBGPStatus CR provides insights into which BGP peers a specific service is being advertised to from a given node. This is a crucial tool for network administrators in Telco environments to verify BGP advertisement and debug connectivity.
+The `ServiceBGPStatus` CR provides insights into which BGP peers a specific service is being advertised to from a given node. This is a crucial tool for network administrators in Telco environments to verify BGP advertisement and debug connectivity.
 
 [NOTE]
 ====
-ServiceBGPStatus resources are created in the `metallb-system` namespace, not in the namespace where your LoadBalancer service is deployed. Always query these resources with `-n metallb-system`.
+`ServiceBGPStatus` resources are created in the `metallb-system` namespace, not in the namespace where your LoadBalancer service is deployed. Always query these resources with `-n metallb-system`.
 ====
 
-== Example: BGP configuration setup
+This example shows how to configure MetalLB for BGP mode to enable `ServiceBGPStatus` monitoring. You need to create an `IPAddressPool`, configure a BGPPeer to connect to your BGP router, and create a BGPAdvertisement to control which pools are advertised.
 
-This example shows how to configure MetalLB for BGP mode to enable ServiceBGPStatus monitoring. You need to create an IPAddressPool, configure a BGPPeer to connect to your BGP router, and create a BGPAdvertisement to control which pools are advertised.
+.Procedure
 
 . Create an IPAddressPool for BGP:
 +
@@ -31,7 +31,7 @@ spec:
   autoAssign: true
 ----
 
-. Configure a BGPPeer to connect to your BGP router:
+. Configure a BGP peer to connect to your BGP router:
 +
 [source,yaml]
 ----
@@ -43,10 +43,12 @@ metadata:
 spec:
   myASN: 64501
   peerASN: 64500
-  peerAddress: 192.168.1.1  # Replace with your BGP router IP
+  peerAddress: 192.168.1.1
 ----
++
+The `spec:peerAddress` field should be set to the IP address of your BGP router.
 
-. Create a BGPAdvertisement to advertise the pool:
+. Create a BGP advertisement to advertise the pool:
 +
 [source,yaml]
 ----
@@ -60,7 +62,7 @@ spec:
   - bgp-pool
 ----
 
-. Deploy a LoadBalancer service. ServiceBGPStatus resources are created automatically when the service has ready endpoints and begins BGP advertisement.
+. Deploy a LoadBalancer service. `ServiceBGPStatus` resources are created automatically when the service has ready endpoints and begins BGP advertisement.
 
 .Prerequisites
 
@@ -154,48 +156,3 @@ The output includes the following important fields:
 * `status.peers` lists the names of the BGPPeer resources to which the service is being advertised. This is useful for confirming that the advertisement is reaching the intended peers.
 * `status.serviceName` indicates the name of the service being advertised.
 * `status.serviceNamespace` indicates the namespace of the service being advertised.
-
-== Verifying BGP session establishment
-
-After creating BGP configuration, you can verify that the BGP session is established and routes are being advertised.
-
-. Check FRRNodeState to see the BGP configuration on each node:
-+
-[source,terminal]
-----
-$ oc get frrnodestate -n metallb-system
-----
-+
-.Example output
-+
-[source,terminal]
-----
-NAME                 AGE
-worker0.example.com  5m
-----
-
-. View the detailed BGP configuration and running state:
-+
-[source,terminal]
-----
-$ oc get frrnodestate worker0.example.com -n metallb-system -o yaml
-----
-+
-The `status.runningConfig` field shows the FRR BGP configuration including configured BGP neighbors, route advertisements, and prefix lists.
-
-. Verify routes are being advertised by checking the FRRNodeState:
-+
-[source,terminal]
-----
-$ oc get frrnodestate <node-name> -n metallb-system -o jsonpath='{.status.runningConfig}' | grep "network"
-----
-+
-.Example output
-+
-[source,terminal]
-----
- address-family ipv4 unicast
-  network 192.168.122.210/32
-----
-+
-This confirms that the service IP is being advertised via BGP.

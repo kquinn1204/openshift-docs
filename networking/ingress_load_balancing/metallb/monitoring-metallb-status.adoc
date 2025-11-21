@@ -22,8 +22,11 @@ include::modules/nw-metallb-viewing-ipaddresspool-status.adoc[leveloffset=+1]
 // View ServiceL2Status not currently in scope
 // include::modules/nw-metallb-viewing-viewing-servicel2status.adoc[leveloffset=+1]
 
-// View BGPPeerStatus
-include::modules/nw-metallb-viewing-viewing-bgppeerstatus.adoc[leveloffset=+1]
+// View ServiceBGPStatus
+include::modules/nw-metallb-viewing-servicebgpstatus.adoc[leveloffset=+1]
+
+// Verify BGP session establishment
+include::modules/nw-metallb-verifying-bgp-session.adoc[leveloffset=+1]
 
 // Troubleshooting
 include::modules/nw-metallb-status-troubleshooting.adoc[leveloffset=+1]

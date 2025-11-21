@@ -5,7 +5,7 @@
 [role="_abstract"]
 You can monitor IP address allocation from your MetalLB pools by viewing the IPAddressPool status, which shows how many addresses are assigned to services and how many remain available for assignment.
 
-As a cluster administrator, you can add address pools to your cluster to control the IP addresses that MetalLB can assign to load-balancer services. This worked example shows how to create an `IPAddressPool` custom resource (CR) and view its status. The advertisement mode is set to L2. 
+As a cluster administrator, you can add address pools to your cluster to control the IP addresses that MetalLB can assign to load-balancer services. This worked example shows how to create an `IPAddressPool` custom resource (CR) and view its status. The advertisement mode is set to L2.
 
 .Prerequisites
 
@@ -23,7 +23,7 @@ spec: {}
 ----
 +
 This deploys the MetalLB controller and speaker pods required for status monitoring.
-
++
 The `IPAddressPool` CR's status section provides details about IP address allocation from a specific pool.
 
 .Procedure
@@ -143,7 +143,7 @@ spec:
         image: quay.io/openshifttest/hello-openshift:multiarch
         ports:
         - containerPort: 8080
-----    
+----
 
 .. Apply the configuration by running the following command:
 +
