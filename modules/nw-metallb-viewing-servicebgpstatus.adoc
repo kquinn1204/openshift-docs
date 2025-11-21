@@ -28,10 +28,10 @@ spec: {}
 ----
 +
 This deploys the MetalLB controller and speaker pods required for status monitoring.
++
+This example shows how to configure MetalLB for BGP mode, deploy a service, and view the `ServiceBGPStatus` to verify BGP advertisements.
 
 .Procedure
-
-This example shows how to configure MetalLB for BGP mode, deploy a service, and view the `ServiceBGPStatus` to verify BGP advertisements.
 
 . Create an IPAddressPool for BGP:
 +
@@ -48,7 +48,7 @@ spec:
   autoAssign: true
 ----
 
-. Apply the IPAddressPool configuration:
+. Apply the `IPAddressPool` configuration:
 +
 [source,terminal]
 ----
@@ -70,7 +70,7 @@ spec:
   peerAddress: 192.168.1.1
 ----
 +
-The `spec:peerAddress` field should be set to the IP address of your BGP router.
+* The `spec:peerAddress` field should be set to the IP address of your BGP router.
 
 . Apply the BGPPeer configuration:
 +
@@ -171,7 +171,7 @@ $ oc apply -f service.yaml
 $ oc get svc test-service -n default
 ----
 +
-.Example output
+The output is similar to the following:
 +
 [source,terminal]
 ----

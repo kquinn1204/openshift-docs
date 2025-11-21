@@ -23,7 +23,7 @@ After configuring MetalLB for BGP mode, you can verify that BGP sessions are est
 $ oc get frrnodestate -n metallb-system
 ----
 +
-.Example output
+The example output lists the FRRNodeState resources for each node where the MetalLB speaker is running.
 +
 [source,terminal]
 ----
@@ -47,7 +47,7 @@ The `status.runningConfig` field shows the FRR BGP configuration including confi
 $ oc get frrnodestate <node-name> -n metallb-system -o jsonpath='{.status.runningConfig}' | grep "network"
 ----
 +
-.Example output
+The output should include the network prefixes being advertised by BGP. For example:
 +
 [source,terminal]
 ----
