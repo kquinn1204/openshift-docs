@@ -183,16 +183,19 @@ $ oc get frrnodestate worker0.example.com -n metallb-system -o yaml
 +
 The `status.runningConfig` field shows the FRR BGP configuration including configured BGP neighbors, route advertisements, and prefix lists.
 
-. Verify routes are being advertised by checking the speaker logs:
+. Verify routes are being advertised by checking the FRRNodeState:
 +
 [source,terminal]
 ----
-$ oc logs -n metallb-system -l component=speaker | grep "service has IP, announcing"
+$ oc get frrnodestate <node-name> -n metallb-system -o jsonpath='{.status.runningConfig}' | grep "network"
 ----
 +
 .Example output
 +
 [source,terminal]
 ----
-{"caller":"main.go:444","event":"serviceAnnounced","ips":["192.168.122.210"],"level":"info","msg":"service has IP, announcing","pool":"bgp-pool","protocol":"bgp"}
+ address-family ipv4 unicast
+  network 192.168.122.210/32
 ----
++
+This confirms that the service IP is being advertised via BGP.

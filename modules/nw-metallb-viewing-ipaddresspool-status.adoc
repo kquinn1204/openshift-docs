@@ -24,8 +24,6 @@ spec: {}
 +
 This deploys the MetalLB controller and speaker pods required for status monitoring.
 
-.Procedure
-
 The `IPAddressPool` CR's status section provides details about IP address allocation from a specific pool.
 
 .Procedure
@@ -142,9 +140,9 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: quay.io/openshifttest/hello-openshift:multiarch
         ports:
-        - containerPort: 80
+        - containerPort: 8080
 ----    
 
 .. Apply the configuration by running the following command:
@@ -171,7 +169,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 8080
   type: LoadBalancer
 ----
 +
