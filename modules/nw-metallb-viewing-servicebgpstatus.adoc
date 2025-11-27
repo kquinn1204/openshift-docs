@@ -9,6 +9,11 @@ The `ServiceBGPStatus` CR provides insights into which BGP peers a specific serv
 
 [NOTE]
 ====
+The `ServiceBGPStatus` CR is updated at a regular poll interval of 2 minutes. It can take up to 2 minutes for the CR to reflect the actual BGP state.
+====
+
+[NOTE]
+====
 `ServiceBGPStatus` resources are created in the `metallb-system` namespace, not in the namespace where your LoadBalancer service is deployed. Always query these resources with `-n metallb-system`.
 ====
 
