@@ -21,6 +21,3 @@ include::modules/nw-metallb-viewing-servicebgpstatus.adoc[leveloffset=+1]
 
 // Verify BGP session establishment
 include::modules/nw-metallb-verifying-bgp-session.adoc[leveloffset=+1]
-
-// Troubleshooting
-include::modules/nw-metallb-status-troubleshooting.adoc[leveloffset=+1]
