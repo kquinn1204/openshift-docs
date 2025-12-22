@@ -81,7 +81,7 @@ In this example output:
 On SNO clusters, you will see only one NodePtpDevice resource for the single master node.
 ====
 
-. The PTP profile uses node labels for matching. Check your Machine Config Pool (MCP) to verify the master MCP. Run the following command:
+. The PTP profile uses node labels for matching. Check your Machine Config Pool (MCP) to verify the master MCP by running the following command:
 +
 [source,terminal]
 ----
@@ -354,7 +354,10 @@ spec:
     - nodeLabel: node-role.kubernetes.io/master
 ----
 +
-IMPORTANT: Replace the example interface names (`ens7f0`, `ens7f1`) with your actual E810 NIC interface names found in step 2. Common E810 interface naming patterns include `ens7f0`, `ens8f0`, `eth0`, `enp2s0f0`, and so on. The exact name depends on your system's BIOS settings and Linux network device naming conventions. Also replace `/dev/ttyGNSS_1700_0` with your actual GNSS serial port device path. The `nodeLabel` is set to `node-role.kubernetes.io/master` to target the SNO master node which serves all roles.
+[IMPORTANT]
+====
+Replace the example interface names (`ens7f0`, `ens7f1`) with your actual E810 NIC interface names found in step 2. Common E810 interface naming patterns include `ens7f0`, `ens8f0`, `eth0`, `enp2s0f0`, and so on. The exact name depends on your system BIOS settings and Linux network device naming conventions. Also, replace `/dev/ttyGNSS_1700_0` with your actual GNSS serial port device path. The `nodeLabel` is set to `node-role.kubernetes.io/master` to target the SNO master node which serves all roles.
+====
 +
 Key Configuration Components:
 +
@@ -376,8 +379,8 @@ Key Configuration Components:
 **Failover Configuration:**
 +
 * `ts2phcOpts --ts2phc.holdover 14400`: 4-hour holdover before switching to NTP
-* `chronydConf`: NTP server configuration for failover replace `time.nist.gov`  with your preferred NTP server
-* `ntpfailover plugin`: Enables automatic GNSS-to-NTP switching with `gnssFailover: true`
+* `chronydConf`: NTP server configuration for failover replace `time.nist.gov` with your preferred NTP server
+* `ntpfailover plugin`: Enables automatic GNSS-to-NTP switching with `gnssFailover: true`.
 +
 **E810 Plugin Configuration:**
 +

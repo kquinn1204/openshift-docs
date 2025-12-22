@@ -7,7 +7,7 @@
 = Creating a PTP Grandmaster Configuration with GNSS Failover
 
 [role="_abstract"]
-Configure a Precision Time Protocol (PTP) Telecom Grandmaster clock with automatic failover from Global Navigation Satellite System (GNSS) to Network Time Protocol (NTP) when satellite signals are unavailable.
+Configure a Precision Time Protocol (PTP) Telecom Grandmaster clock with automatic failover from global navigation satellite system (GNSS) to Network Time Protocol (NTP) when satellite signals are unavailable.
 
 This procedure configures a T-GM (Telecom Grandmaster) clock that uses an Intel E810 Westport Channel NIC as the PTP grandmaster clock with GNSS to NTP failover capabilities.
 
@@ -48,7 +48,7 @@ ptp-operator-75c77dbf86-xm9kl   1/1     Running   0          20m   10.129.0.45  
 +
 [NOTE]
 ====
-The number of `linuxptp-daemon` pods is determined by the node labels defined in the `PtpOperatorConfig` which controls the DaemonSet deployment. The PtpConfig profile matching, as shown in Step 4, only determines which specific PTP settings are applied on the running daemons. In this example, the operator's configuration targets all 5 worker nodes. For {sno} clusters, you will see only one `linuxptp-daemon` pod, as the configuration targets only the control plane node which acts as the worker.
+TThe number of `linuxptp-daemon` pods is determined by the node labels defined in the `PtpOperatorConfig` which controls the DaemonSet deployment. The PtpConfig profile matching, as shown in Step 4, only determines which specific PTP settings are applied on the running daemons. In this example, the operator configuration targets all 5 worker nodes. For {sno} clusters, you will see only one `linuxptp-daemon` pod, as the configuration targets only the control plane node which acts as the worker.
 ====
 
 . Check which network interfaces support hardware timestamping by running the following command:
@@ -99,15 +99,15 @@ metadata:
 +
 In this example output:
 +
-* `ens7f0` and `ens7f1` are PTP-capable interfaces (Intel E810 NIC ports)
-* `phcIndex` indicates the PTP Hardware Clock number (maps to `/dev/ptp0`, `/dev/ptp1`, and so on)
+* `ens7f0` and `ens7f1` are PTP-capable interfaces (Intel E810 NIC ports).
+* `phcIndex` indicates the PTP Hardware Clock number (maps to `/dev/ptp0`, `/dev/ptp1`, and so on).
 +
 [NOTE]
 ====
-The output shows one NodePtpDevice resource for each node with PTP-capable interfaces. In this example, 5 worker nodes have Intel E810 NICs. For {sno} clusters, you would see only one NodePtpDevice resource.
+The output shows one NodePtpDevice resource for each node with PTP-capable interfaces. In this example, five worker nodes have Intel E810 NICs. For {sno} clusters, you would see only one NodePtpDevice resource.
 ====
 
-. The PTP profile uses node labels for matching. Check your Machine Config Pool (MCP) to find the node labels. Run the following command:
+. The PTP profile uses node labels for matching. Check your machine config pool (MCP) to find the node labels by running the following command:
 +
 [source,terminal]
 ----
@@ -381,7 +381,10 @@ spec:
     - nodeLabel: node-role.kubernetes.io/<MCP-name>
 ----
 +
-IMPORTANT: Replace the example interface names (`ens7f0`, `ens7f1`) with your actual E810 NIC interface names found in step 2. Common E810 interface naming patterns include `ens7f0`, `ens8f0`, `eth0`, `enp2s0f0`, and so on. The exact name depends on your system's firmware settings and Linux network device naming conventions. Also replace `/dev/ttyGNSS_1700_0` with your actual GNSS serial port device path. For {sno} clusters, replace `<MCP-name>` with `master` in the nodeLabel match. For multi-node clusters using worker nodes as T-GM, use `worker`.
+[IMPORTANT]
+====
+Replace the example interface names (`ens7f0`, `ens7f1`) with your actual E810 NIC interface names found in step 2. Common E810 interface naming patterns include `ens7f0`, `ens8f0`, `eth0`, `enp2s0f0`, and so on. The exact name depends on your system firmware settings and Linux network device naming conventions. Also replace `/dev/ttyGNSS_1700_0` with your actual GNSS serial port device path. For {sno} clusters, replace `<MCP-name>` with `master` in the nodeLabel match. For multi-node clusters using worker nodes as T-GM, use `worker`.
+====
 +
 Key Configuration Components:
 +
@@ -457,7 +460,7 @@ NAME           AGE
 grandmaster    2m
 ----
 
-. Check the NodePtpDevice to see if the profile is applied by running the following command, replacing `<node_name>` with your node's hostname:
+. Check the NodePtpDevice to see if the profile is applied by running the following command, replacing `<node_name>` with your node hostname:
 +
 [source,terminal]
 ----

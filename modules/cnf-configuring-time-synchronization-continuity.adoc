@@ -7,7 +7,7 @@
 = Configuring GNSS failover to NTP for time synchronization continuity
 
 [role="_abstract"]
-Automatic failover from Global Navigation Satellite System (GNSS) to Network Time Protocol (NTP) maintains time synchronization continuity when the primary signal is lost, ensuring system stability for telco operations.
+Automatic failover from global navigation satellite system (GNSS) to Network Time Protocol (NTP) maintains time synchronization continuity when the primary signal is lost, ensuring system stability for telco operations.
 
 Telco operators require time source redundancy to ensure time synchronization continuity and system stability.
 
