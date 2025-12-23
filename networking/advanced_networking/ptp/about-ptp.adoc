@@ -6,6 +6,7 @@ include::_attributes/common-attributes.adoc[]
 
 toc::[]
 
+[role="_abstract"]
 Precision Time Protocol (PTP) is used to synchronize clocks in a network. When used in conjunction with hardware support, PTP is capable of sub-microsecond accuracy, and is more accurate than Network Time Protocol (NTP).
 
 [IMPORTANT]

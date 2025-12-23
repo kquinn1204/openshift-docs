@@ -6,11 +6,12 @@
 [id="configuring-gnss-to-ntp-failover-sno_{context}"]
 = Creating a PTP Grandmaster Configuration with GNSS Failover on Single Node OpenShift
 
-This procedure configures a T-GM (Telecom Grandmaster) clock on {sno} (SNO) that uses an Intel E810 Westport Channel NIC as the PTP grandmaster clock with GNSS to NTP failover capabilities.
+[role="_abstract"]
+This procedure configures a T-GM (Telecom Grandmaster) clock on {sno} that uses an Intel E810 Westport Channel NIC as the PTP grandmaster clock with GNSS to NTP failover capabilities.
 
 .Prerequisites
 
-* For T-GM clocks in production environments, install an Intel E810 Westport Channel NIC in the bare-metal SNO host.
+* For T-GM clocks in production environments, install an Intel E810 Westport Channel NIC in the bare metal {sno} host.
 
 * Install the OpenShift CLI (`oc`).
 
@@ -37,7 +38,7 @@ ptp-operator-75c77dbf86-xm9kl   1/1     Running   0          20m   10.129.0.45  
 ----
 +
 * `ptp-operator-*`: The PTP Operator pod (one instance in the cluster).
-* `linuxptp-daemon-*`: The linuxptp daemon pod. On SNO, there is only one daemon pod running on the master node. The daemon pod should show `2/2` in the READY column, indicating both containers (`linuxptp-daemon-container` and `kube-rbac-proxy`) are running.
+* `linuxptp-daemon-*`: The linuxptp daemon pod. On {sno}, there is only one daemon pod running on the master node. The daemon pod should show `2/2` in the READY column, indicating both containers (`linuxptp-daemon-container` and `kube-rbac-proxy`) are running.
 
 . Check which network interfaces support hardware timestamping by running the following command:
 +
@@ -46,7 +47,7 @@ ptp-operator-75c77dbf86-xm9kl   1/1     Running   0          20m   10.129.0.45  
 $ oc get NodePtpDevice -n openshift-ptp -o yaml
 ----
 +
-The output is similar to the following one, showing the NodePtpDevice resource for the SNO node with PTP-capable network interfaces:
+The output is similar to the following one, showing the NodePtpDevice resource for the {sno} node with PTP-capable network interfaces:
 +
 [source,yaml]
 ----
@@ -78,7 +79,7 @@ In this example output:
 +
 [NOTE]
 ====
-On SNO clusters, you will see only one NodePtpDevice resource for the single master node.
+On {sno} clusters, you will see only one NodePtpDevice resource for the single master node.
 ====
 
 . The PTP profile uses node labels for matching. Check your Machine Config Pool (MCP) to verify the master MCP by running the following command:
@@ -102,7 +103,7 @@ worker   rendered-worker-f6e5*   True      False      False      0              
 The CONFIG column shows a truncated hash of the rendered MachineConfig. In actual output, this will be a full 64-character hash like `rendered-master-a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6`.
 ====
 +
-On SNO clusters, the master MCP shows `MACHINECOUNT` of 1 (the single node), and the worker MCP shows `MACHINECOUNT` of 0. The PTP profile must target the `master` node label.
+On {sno} clusters, the master MCP shows `MACHINECOUNT` of 1 (the single node), and the worker MCP shows `MACHINECOUNT` of 0. The PTP profile must target the `master` node label.
 
 . Create a `PtpConfig` custom resource (CR) that configures the T-GM clock with GNSS to NTP failover. Save the following YAML configuration to a file named `ptp-config-gnss-ntp-failover-sno.yaml`.
 +
@@ -356,7 +357,7 @@ spec:
 +
 [IMPORTANT]
 ====
-Replace the example interface names (`ens7f0`, `ens7f1`) with your actual E810 NIC interface names found in step 2. Common E810 interface naming patterns include `ens7f0`, `ens8f0`, `eth0`, `enp2s0f0`, and so on. The exact name depends on your system BIOS settings and Linux network device naming conventions. Also, replace `/dev/ttyGNSS_1700_0` with your actual GNSS serial port device path. The `nodeLabel` is set to `node-role.kubernetes.io/master` to target the SNO master node which serves all roles.
+Replace the example interface names (`ens7f0`, `ens7f1`) with your actual E810 NIC interface names found in step 2. Common E810 interface naming patterns include `ens7f0`, `ens8f0`, `eth0`, `enp2s0f0`, and so on. The exact name depends on your system BIOS settings and Linux network device naming conventions. Also, replace `/dev/ttyGNSS_1700_0` with your actual GNSS serial port device path. The `nodeLabel` is set to `node-role.kubernetes.io/master` to target the {sno} master node which serves all roles.
 ====
 +
 Key Configuration Components:
@@ -433,7 +434,7 @@ NAME           AGE
 grandmaster    2m
 ----
 
-. Check the NodePtpDevice to see if the profile is applied. First, get your SNO node name:
+. Check the NodePtpDevice to see if the profile is applied. First, get your {sno} node name:
 +
 [source,terminal]
 ----
