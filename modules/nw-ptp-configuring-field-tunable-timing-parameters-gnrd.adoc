@@ -42,36 +42,18 @@ spec:
         structure: |
           hardwareSpecificDefinitions: dell/XR8720t
       holdover:
-        maxInSpecOffset: 14400 <1>
-        localMaxHoldoverOffset: 1500 <2>
-        localHoldoverTimeout: 1500 <3>
+        maxInSpecOffset: 14400 # Maximum allowed offset in seconds before DPLL enters FREERUN (default: 14400)
+        localMaxHoldoverOffset: 1500 # Maximum offset during holdover in nanoseconds (default: 1500)
+        localHoldoverTimeout: 1500 # Holdover timeout duration in seconds (default: 1500)
       gnss:
-        antennaVoltage: 5 <4>
-        constellation: GPS <5>
+        antennaVoltage: 5 # Antenna voltage in volts (use 3.3 or 5 based on antenna specification)
+        constellation: GPS # GNSS constellation support (GPS, GLONASS, Galileo, BeiDou)
         surveyMode:
-          observationTime: 600 <6>
-          accuracyThreshold: 50000 <7>
-        serialDevice: /dev/gnss0 <8>
-  relatedPtpProfileName: gnrd-tgm-profile <9>
+          observationTime: 600 # Survey mode observation time in seconds (default: 600)
+          accuracyThreshold: 50000 # Survey mode accuracy threshold (default: 50000)
+        serialDevice: /dev/gnss0 # Serial port device path for GNSS receiver
+  relatedPtpProfileName: gnrd-tgm-profile # Must match the profile name in your PtpConfig CR
 ----
-<1> `maxInSpecOffset`: Maximum allowed offset in seconds before the DPLL enters FREERUN state.
-Default is 14400 seconds (4 hours).
-<2> `localMaxHoldoverOffset`: Maximum offset during holdover in nanoseconds.
-Default is 1500 nanoseconds.
-<3> `localHoldoverTimeout`: Holdover timeout duration in seconds.
-Default is 1500 seconds.
-<4> `antennaVoltage`: Antenna voltage configuration in volts.
-Use `3.3` or `5` depending on your GNSS antenna specification.
-<5> `constellation`: GNSS constellation support.
-Supported values: `GPS`, `GLONASS`, `Galileo`, `BeiDou`.
-<6> `observationTime`: Survey mode observation time in seconds.
-Default is 600 seconds.
-<7> `accuracyThreshold`: Survey mode accuracy threshold.
-Default is 50000.
-<8> `serialDevice`: Serial port device path for GNSS receiver.
-Default is `/dev/gnss0`.
-<9> `relatedPtpProfileName`: Links the `HardwareConfig` CR to the `PtpConfig` profile name.
-This value must match the profile name in your `PtpConfig` CR exactly.
 
 . Apply the `HardwareConfig` CR:
 +
@@ -144,4 +126,3 @@ I0904 12:35:01.123456    1234 dpll.go:789] DPLL operational state: LOCKED
 
 * Field-tunable timing parameters reference for Intel Granite Rapids-D
 * Configuring linuxptp services as a Telecom Grandmaster clock on Intel Granite Rapids-D hardware
-* Technology Preview limitations for Telecom Grandmaster on Intel Granite Rapids-D
