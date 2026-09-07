@@ -10,9 +10,6 @@
 The following operational metrics and performance specifications apply to Telecom Grandmaster (T-GM) deployments on Intel Granite Rapids-D (GNR-D) hardware.
 Monitor these metrics to verify timing health and detect synchronization degradation.
 
-:FeatureName: Telecom Grandmaster clocks on Intel Granite Rapids-D hardware
-include::snippets/technology-preview.adoc[]
-
 [id="nw-ptp-tgm-operational-metrics-reference-thresholds_{context}"]
 == Synchronization threshold values
 

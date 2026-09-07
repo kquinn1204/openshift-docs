@@ -10,9 +10,6 @@
 You can diagnose and resolve digital phase-locked loop (DPLL) synchronization failures on Telecom Grandmaster (T-GM) deployments using Intel Granite Rapids-D hardware.
 Common failure scenarios include DPLL stuck in FREERUN state, inability to achieve LOCKED state, and frequent transitions between LOCKED and HOLDOVER states.
 
-:FeatureName: Telecom Grandmaster clocks on Intel Granite Rapids-D hardware
-include::snippets/technology-preview.adoc[]
-
 .Prerequisites
 
 * You have configured a Telecom Grandmaster on Intel Granite Rapids-D hardware.

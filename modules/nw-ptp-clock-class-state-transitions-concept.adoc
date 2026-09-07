@@ -10,9 +10,6 @@
 The Precision Time Protocol (PTP) Clock Class attribute indicates the quality and traceability of the time source in Telecom Grandmaster (T-GM) deployments.
 Clock Class transitions occur automatically during GNSS signal loss and recovery scenarios, enabling downstream devices to select the best available timing source.
 
-:FeatureName: Telecom Grandmaster clocks on Intel Granite Rapids-D hardware
-include::snippets/technology-preview.adoc[]
-
 == Clock Class overview
 
 The Clock Class is a PTP attribute that categorizes clocks based on their accuracy and traceability to a Primary Reference Time Clock (PRTC).

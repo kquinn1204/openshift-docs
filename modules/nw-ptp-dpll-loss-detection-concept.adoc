@@ -10,9 +10,6 @@
 Digital phase-locked loop (DPLL) loss detection on Carter Flat network interface cards (NICs) enables automatic fault detection and Clock Class state transitions when timing reference signals are lost.
 The Linux kernel DPLL subsystem reports pin operational state changes to the PTP Operator, enabling automated Clock Class transitions without manual intervention.
 
-:FeatureName: Telecom Grandmaster clocks on Intel Granite Rapids-D hardware
-include::snippets/technology-preview.adoc[]
-
 == DPLL loss detection overview
 
 DPLL loss detection provides automatic detection of timing reference loss on follower DPLLs in Carter Flat (Intel E830) NICs synchronized to the NAC DPLL.

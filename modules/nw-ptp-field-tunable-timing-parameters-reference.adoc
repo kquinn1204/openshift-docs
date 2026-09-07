@@ -10,9 +10,6 @@
 The following field-tunable precision timing parameters are available for Telecom Grandmaster (T-GM) deployments on Intel Granite Rapids-D (GNR-D) hardware.
 These parameters can be configured via the `HardwareConfig` custom resource (CR) without requiring kernel or firmware upgrades.
 
-:FeatureName: Field-tunable precision timing parameters on Intel Granite Rapids-D Telecom Grandmaster
-include::snippets/technology-preview.adoc[]
-
 [id="nw-ptp-field-tunable-timing-parameters-reference-holdover_{context}"]
 == Holdover parameters
 

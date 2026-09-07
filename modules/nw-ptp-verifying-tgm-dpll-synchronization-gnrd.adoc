@@ -10,9 +10,6 @@
 You can verify that the Telecom Grandmaster (T-GM) digital phase-locked loop (DPLL) is synchronized to the GNSS time source and that timing offsets remain within acceptable thresholds.
 Verification includes monitoring DPLL operational state, Clock Class transitions, timing offset metrics, and holdover behavior during GNSS loss scenarios.
 
-:FeatureName: Telecom Grandmaster clocks on Intel Granite Rapids-D hardware
-include::snippets/technology-preview.adoc[]
-
 .Prerequisites
 
 * You have configured a Telecom Grandmaster on Intel Granite Rapids-D hardware.

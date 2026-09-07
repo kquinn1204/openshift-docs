@@ -10,9 +10,6 @@
 You can configure field-tunable precision timing parameters on Intel Granite Rapids-D (GNR-D) Telecom Grandmaster (T-GM) deployments without requiring kernel or firmware upgrades.
 Field-tunable parameters include holdover thresholds, GNSS source settings, and DPLL parameters.
 
-:FeatureName: Field-tunable precision timing parameters on Intel Granite Rapids-D Telecom Grandmaster
-include::snippets/technology-preview.adoc[]
-
 .Prerequisites
 
 * You have installed the {product-title} CLI (`oc`).

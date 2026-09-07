@@ -10,9 +10,6 @@
 You can diagnose and resolve GNSS connectivity problems on Telecom Grandmaster (T-GM) deployments using Intel Granite Rapids-D hardware.
 Common failure scenarios include no GNSS signal detected, poor GNSS signal quality, and intermittent GNSS signal reception.
 
-:FeatureName: Telecom Grandmaster clocks on Intel Granite Rapids-D hardware
-include::snippets/technology-preview.adoc[]
-
 .Prerequisites
 
 * You have installed a GNSS antenna.

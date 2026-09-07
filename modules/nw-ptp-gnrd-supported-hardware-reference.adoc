@@ -10,9 +10,6 @@
 The following hardware configurations are qualified for Telecom Grandmaster (T-GM) deployments on Intel Granite Rapids-D (GNR-D) platforms.
 Verify that your hardware, bill of materials, and Red Hat Ecosystem Catalog certification status align with your deployment requirements.
 
-:FeatureName: Telecom Grandmaster clocks on Intel Granite Rapids-D hardware
-include::snippets/technology-preview.adoc[]
-
 [id="nw-ptp-gnrd-supported-hardware-reference-dell_{context}"]
 == Dell PowerEdge XR8720t specifications
 
