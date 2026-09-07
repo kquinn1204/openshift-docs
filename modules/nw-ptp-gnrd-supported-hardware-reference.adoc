@@ -67,42 +67,61 @@ Verify that all components are certified in the Red Hat Ecosystem Catalog before
 Verify the certification status of your hardware platform in the Red Hat Ecosystem Catalog at link:https://catalog.redhat.com/[catalog.redhat.com].
 Search for "Dell PowerEdge XR8720t" to confirm that your specific hardware configuration is certified for {product-title} {product-version}.
 
-[id="nw-ptp-gnrd-supported-hardware-reference-restrictions_{context}"]
-== Platform restrictions for {product-title} {product-version} Technology Preview
+[id="nw-ptp-gnrd-supported-hardware-reference-configuration_{context}"]
+== Platform configuration and restrictions
 
-The following platform restrictions apply to Telecom Grandmaster deployments on Intel Granite Rapids-D hardware in {product-title} {product-version}:
+The following table describes platform restrictions, port configuration, and interface naming requirements for Telecom Grandmaster deployments on Intel Granite Rapids-D hardware.
 
-XCC variant only:: Only the Dell PowerEdge XR8720t XCC (eXtreme Compute Cluster) variant is supported in this Technology Preview release.
-The HCC (High Core Count) variant is not supported.
+.Platform restrictions and configuration requirements
+[cols="2,2,3",options="header"]
+|===
+|Category
+|Item
+|Details
 
-No T-BC support:: Telecom Boundary Clock (T-BC) configurations are not supported on Intel Granite Rapids-D hardware in {product-title} {product-version}.
-T-BC support is deferred to a future release.
+3+^|*Platform restrictions for {product-title} {product-version} Technology Preview*
 
-No dual TR port HA:: Dual time receiver (TR) port high availability configurations are not supported in {product-title} {product-version}.
-Dual TR port HA is deferred to a future release.
+|Hardware variant
+|XCC variant only
+|Only the Dell PowerEdge XR8720t XCC (eXtreme Compute Cluster) variant is supported in this Technology Preview release. The HCC (High Core Count) variant is not supported.
 
-Dell-only support:: Only Dell hardware platforms are supported in {product-title} {product-version}.
-HPE platform support (EL140 and DL110 models) is planned for {product-title} 5.2.
+|Clock configuration
+|No T-BC support
+|Telecom Boundary Clock (T-BC) configurations are not supported on Intel Granite Rapids-D hardware in {product-title} {product-version}. T-BC support is deferred to a future release.
 
-[id="nw-ptp-gnrd-supported-hardware-reference-ports_{context}"]
-== Port configuration and time transmitter capacity
+|High availability
+|No dual TR port HA
+|Dual time receiver (TR) port high availability configurations are not supported in {product-title} {product-version}. Dual TR port HA is deferred to a future release.
 
-The combined NAC adapter and Carter Flat NIC configuration provides 24 time transmitter (TT) ports for distributing precision timing to downstream devices:
+|Platform support
+|Dell-only support
+|Only Dell hardware platforms are supported in {product-title} {product-version}. HPE platform support (EL140 and DL110 models) is planned for {product-title} 5.2.
 
-NAC adapter:: 7 time transmitter ports
+3+^|*Port configuration and time transmitter capacity*
 
-Carter Flat NIC 1:: 8 time transmitter ports
+|NAC adapter
+|7 ports
+|Time transmitter ports on onboard NAC adapter.
 
-Carter Flat NIC 2:: 8 time transmitter ports
+|Carter Flat NIC 1
+|8 ports
+|Time transmitter ports on first Intel E830 NIC.
 
-Total time transmitter capacity:: 24 ports
-+
-This port configuration enables Radio Units (RUs) to connect directly to the Distributed Unit (DU) server, eliminating the fronthaul switch from the timing path and reducing timing distribution complexity in Far Edge RAN deployments.
+|Carter Flat NIC 2
+|8 ports
+|Time transmitter ports on second Intel E830 NIC.
 
-[id="nw-ptp-gnrd-supported-hardware-reference-naming_{context}"]
-== Interface naming requirements
+|Total capacity
+|24 ports
+|Combined time transmitter (TT) port capacity. This configuration enables Radio Units (RUs) to connect directly to the Distributed Unit (DU) server, eliminating the fronthaul switch from the timing path and reducing timing distribution complexity in Far Edge RAN deployments.
 
-Onboard NAC ports and Carter Flat ports can appear in the same kernel namespace, which makes Precision Time Protocol (PTP) metrics ambiguous unless interfaces are renamed with distinct prefixes.
-Apply a `MachineConfig` resource to configure path-based interface naming so that each card presents a unique interface prefix before you apply a Telecom Grandmaster `PtpConfig` custom resource (CR).
+3+^|*Interface naming requirements*
 
-For more information about interface naming and the required `MachineConfig` resource, see "Configuring linuxptp services as a Telecom Grandmaster clock on Intel Granite Rapids-D hardware".
+|Namespace collision
+|NAC and Carter Flat ports
+|Onboard NAC ports and Carter Flat ports can appear in the same kernel namespace, which makes Precision Time Protocol (PTP) metrics ambiguous unless interfaces are renamed with distinct prefixes.
+
+|Configuration requirement
+|Path-based naming via `MachineConfig`
+|Apply a `MachineConfig` resource to configure path-based interface naming so that each card presents a unique interface prefix before you apply a Telecom Grandmaster `PtpConfig` custom resource (CR). For more information, see "Configuring linuxptp services as a Telecom Grandmaster clock on Intel Granite Rapids-D hardware".
+|===
